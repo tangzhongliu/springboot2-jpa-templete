@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    active:
+      - dev
+  application:
+    name: lemon-templete
+
+logging:
+  # SpringBoot默认使用的的日志框架是slf4j + Logback
+  config: classpath:logback-spring.xml
+
+constant:
+  redis:
+    key:
+      all-user: ALL_USER

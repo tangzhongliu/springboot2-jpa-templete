@@ -1,0 +1,308 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "柠檬汤demo系统接口",
+    "version": "1.0",
+    "description": "这是一个实现RESTful风格接口的简单实例，提供了CRUD的例子。"
+  },
+  "host": "localhost:8090",
+  "basePath": "/api/v1",
+  "tags": [
+    {
+      "name": "sys",
+      "description": "系统信息，包含用户，角色，功能等信息"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/sys/users/login": {
+      "post": {
+        "tags": [
+          "sys"
+        ],
+        "summary": "用户登录",
+        "description": "传入登录用户名和密码，进行认证登录",
+        "parameters": [
+          {
+            "name": "userName",
+            "in": "query",
+            "description": "登录用户名",
+            "required": true
+          },
+          {
+            "name": "userPassword",
+            "in": "query",
+            "description": "登录用户密码",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "用户登录成功"
+          },
+          "401": {
+            "description": "用户名或密码输入错误"
+          },
+          "403": {
+            "description": "用户访问权限不足"
+          }
+        }
+      }
+    },
+    "/sys/users/logout": {
+      "post": {
+        "tags": [
+          "sys"
+        ],
+        "summary": "用户注销",
+        "description": "用户注销，退出当前系统",
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "用户注销成功"
+          }
+        }
+      }
+    },
+    "/sys/users": {
+      "post": {
+        "tags": [
+          "sys"
+        ],
+        "summary": "新增用户",
+        "description": "新增用户",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "包含用户信息的JSON",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SysUser"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "新增用户成功"
+          },
+          "401": {
+            "description": "用户未登录"
+          },
+          "403": {
+            "description": "用户访问权限不足"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "sys"
+        ],
+        "summary": "获取所有用户信息",
+        "description": "无需传入参数，获取所有用户信息",
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SysUser"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sys/users/page": {
+      "get": {
+        "tags": [
+          "sys"
+        ],
+        "summary": "获取所有用户信息(分页模式)",
+        "description": "传入分页参数，page（第几页，默认由0开始）和size（每页显示几条记录），获取分页信息",
+        "parameters": [
+          {
+            "name": "page",
+            "description": "第几页，默认由0开始",
+            "in": "query",
+            "required": true
+          },
+          {
+            "name": "size",
+            "description": "每页显示几条记录",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功取得分页信息",
+            "schema": {
+              "$ref": "#/definitions/Page"
+            }
+          }
+        }
+      }
+    },
+    "/sys/users/{id}": {
+      "get": {
+        "tags": [
+          "sys"
+        ],
+        "summary": "获取用户信息",
+        "description": "传入用户ID，获取用户信息",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "用户ID",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/SysUser"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "sys"
+        ],
+        "summary": "编辑用户",
+        "description": "编辑已存在的用户",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "用户ID",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "包含用户信息的JSON",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SysUser"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "编辑用户成功"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "sys"
+        ],
+        "summary": "删除用户",
+        "description": "传入用户ID，删除用户信息",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "用户ID",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "删除用户成功"
+          }
+        }
+      }
+    },
+    "/sys/users/{id}/status": {
+      "put": {
+        "tags": [
+          "sys"
+        ],
+        "summary": "编辑数据状态",
+        "description": "编辑已存在的用户的状态为启用/禁用",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "用户ID",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "用户状态",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "编辑数据状态成功"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Page": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+          }
+        }
+      }
+    },
+    "SysUser": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "createTime": {
+          "type": "string"
+        },
+        "updateTime": {
+          "type": "string"
+        },
+        "createUser": {
+          "type": "string"
+        },
+        "updateUser": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer"
+        },
+        "version": {
+          "type": "integer"
+        },
+        "userName": {
+          "type": "string"
+        },
+        "userPassword": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
